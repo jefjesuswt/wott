@@ -64,6 +64,10 @@ The processor extracts the specific media data the player requested, along with 
 
 This project's implementation of the `SabrPlayerAdapter` interface for Shaka Player can be found in [`src/app/core/streaming/ShakaPlayerAdapter.ts`][shakaplayeradapter].
 
+## Acknowledgments
+
+This project is heavily inspired by the original [Kira](https://github.com/LuanRT/kira) project by LuanRT. Much of the core logic for handling SABR streaming is based on his work in the [googlevideo][googlevideo] and [youtubei.js][youtubeijs] libraries.
+
 ## License
 
 Distributed under the MIT License.
