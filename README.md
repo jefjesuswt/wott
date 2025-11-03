@@ -26,21 +26,69 @@ Wott is an experimental Angular-based web client for YouTube, designed to demons
 - Viewing video comments.
 - Improved accessibility.
 
-## Building from Source
+## How to Run
 
-1.  Install dependencies and run the application:
+To run Wott, you need two separate processes running simultaneously: the **proxy server** and the **frontend application**.
 
-    ```bash
-    # Using bun
-    bun install
-    bun start
+**1. Start the Proxy Server**
 
-    # Or with npm
-    # npm install
-    # npm start
-    ```
+The proxy server acts as a small backend, handling requests to YouTube's internal APIs (InnerTube) to bypass browser CORS restrictions.
 
-2.  Open your browser and navigate to `http://localhost:4200`.
+In a terminal, start the proxy using Deno:
+
+```bash
+
+deno run --allow-net --allow-read --allow-write ./proxy/deno.ts
+
+```
+
+By default, the proxy will run on `http://localhost:8080`.
+
+**2. Start the Frontend**
+
+In a second terminal, install the dependencies and start the Angular development server:
+
+```bash
+
+# Using bun
+
+bun install
+
+bun start
+
+
+
+# Or with npm
+
+npm install
+
+npm start
+
+```
+
+**3. Configure the App**
+
+Navigate to `http://localhost:4200` in your browser. The app will ask for the IP address and port of your proxy. Enter the address of the proxy server you started in step 1 (e.g., `http://localhost:8080`).
+
+## Building for Production
+
+To create an optimized production build, run:
+
+```bash
+
+# Using bun
+
+bun run build
+
+
+
+# Or with npm
+
+npm run build
+
+```
+
+The output will be in the `dist/` directory.
 
 To build for production:
 
