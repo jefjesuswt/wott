@@ -1,0 +1,16 @@
+<div class="toast-container" aria-live="polite" aria-label="Notifications">
+  @for (toast of toastStore.toasts(); track toast.id) {
+  <div class="toast" [class]="toast.type" role="alert" [attr.aria-label]="toast.message">
+    <div class="toast-content">
+      <span class="toast-message">{{ toast.message }}</span>
+      <button
+        class="toast-dismiss"
+        (click)="removeToastNotification(toast.id)"
+        aria-label="Dismiss notification"
+      >
+        ×
+      </button>
+    </div>
+  </div>
+  }
+</div>

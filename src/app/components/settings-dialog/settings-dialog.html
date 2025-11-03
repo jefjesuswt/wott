@@ -1,0 +1,116 @@
+<div
+  class="dialog-overlay"
+  (click)="$event.target === $event.currentTarget && handleClose()"
+  (keydown.esc)="handleClose()"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="dialog-title"
+  tabindex="-1"
+  #dialogRef
+>
+  <div class="dialog-content">
+    <header class="dialog-header">
+      <h2 id="dialog-title" class="dialog-title">Settings</h2>
+      <button
+        class="close-button"
+        (click)="handleClose()"
+        aria-label="Close settings dialog"
+        type="button"
+      >
+        <app-close-icon />
+      </button>
+    </header>
+    <div class="dialog-body">
+      @if (usingExtension()) {
+      <div class="info-text info-text--success" role="status" aria-live="polite">
+        <app-check-icon />
+        <span>
+          The
+          <a [href]="YTC_BRIDGE_GITHUB_URL" target="_blank" rel="noopener noreferrer">ytc-bridge</a>
+          extension is active. You don't need to configure a proxy.
+        </span>
+      </div>
+      } @else if (showInfoText()) {
+      <div class="info-text info-text--info" role="alert">
+        <app-info-icon class="info-icon" />
+        <span>
+          To use this application, please configure a proxy server or install the
+          <a [href]="YTC_BRIDGE_GITHUB_URL" target="_blank" rel="noopener noreferrer">ytc-bridge</a>
+          browser extension (recommended).
+        </span>
+      </div>
+      }
+
+      <form (ngSubmit)="handleSave()" class="settings-form">
+        <div class="form-group">
+          <label for="proxy-protocol" class="form-label">Protocol</label>
+          <div class="select-wrapper">
+            <select
+              id="proxy-protocol"
+              [disabled]="usingExtension()"
+              class="form-select"
+              name="proxy-protocol"
+              [ngModel]="localSettings().protocol"
+              (ngModelChange)="updateSettings('protocol', $event)"
+            >
+              <option value="http">HTTP</option>
+              <option value="httpsS">HTTPS</option>
+            </select>
+            <app-arrow-down-icon class="select-icon" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="proxy-host" class="form-label">Host</label>
+          <input
+            type="text"
+            id="proxy-host"
+            [disabled]="usingExtension()"
+            (blur)="validateHost()"
+            name="proxy-host"
+            placeholder="e.g., localhost"
+            class="form-input"
+            [class.form-input--error]="hostError()"
+            [ngModel]="localSettings().host"
+            (ngModelChange)="updateSettings('host', $event)"
+          />
+          @if (hostError()) {
+          <div id="host-error" class="form-error" role="alert">{{ hostError() }}</div>
+          }
+        </div>
+        <div class="form-group">
+          <label for="proxy-port" class="form-label">Port</label>
+          <input
+            type="number"
+            id="proxy-port"
+            [disabled]="usingExtension()"
+            (blur)="validatePort()"
+            name="proxy-port"
+            placeholder="e.g., 8080"
+            class="form-input"
+            [class.form-input--error]="portError()"
+            min="1"
+            max="65535"
+            [ngModel]="localSettings().port"
+            (ngModelChange)="updateSettings('port', $event)"
+          />
+          @if (portError()) {
+          <div id="port-error" class="form-error" role="alert">{{ portError() }}</div>
+          }
+        </div>
+      </form>
+    </div>
+    <footer class="dialog-footer">
+      <button class="button button--secondary" (click)="handleClose()" type="button">Cancel</button>
+      <button
+        class="button button--primary"
+        (click)="handleSave()"
+        [disabled]="usingExtension() || !isFormValid() || isSaving()"
+        type="button"
+      >
+        @if (isSaving()) {
+        <span class="button-spinner"></span>
+        } {{ isSaving() ? "Saving..." : "Save & Reload" }}
+      </button>
+    </footer>
+  </div>
+</div>
